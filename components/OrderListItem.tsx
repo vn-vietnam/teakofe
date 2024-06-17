@@ -11,12 +11,24 @@ import {
 	Portal,
 } from "react-native-paper";
 import { useRouter } from "expo-router";
+import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs";
+import { useDeleteOrder } from "@/api/orders";
+import { useDeleteAllOrderSubcription } from "@/api/orders/subcription";
+dayjs.extend(relativeTime);
 
 const OrderListItem = ({ order, title }: any) => {
 	const [visible, setVisible] = React.useState(false);
 	const router = useRouter();
 	const showModal = () => setVisible(true);
 	const hideModal = () => setVisible(false);
+	// const { data, isLoading, error } = useDeleteOrder(order.id);
+	const DeleteItem = () => {
+		console.log("fd");
+		useDeleteOrder(order.id);
+		setVisible(false);
+	};
+	useDeleteAllOrderSubcription();
 	return (
 		<>
 			<Portal>
@@ -52,7 +64,7 @@ const OrderListItem = ({ order, title }: any) => {
 							</Button>
 							<Button
 								mode="outlined"
-								onPress={() => console.log("Pressed")}
+								onPress={() => DeleteItem()}
 								style={{ borderWidth: 1, borderColor: "#140e03" }}
 								labelStyle={{ color: "#140e03" }}
 							>
@@ -62,55 +74,57 @@ const OrderListItem = ({ order, title }: any) => {
 					</Dialog.Content>
 				</Dialog>
 			</Portal>
-			<Card.Title
-				title="#Order_01"
-				subtitle="Card Subtitle"
-				left={(props) => (
-					<Avatar.Text
-						{...props}
-						label="01"
-						style={{ backgroundColor: "#865d17" }}
-					/>
-				)}
-				right={(props) => (
-					<View
-						style={{
-							flex: 1,
-							flexDirection: "row",
-							justifyContent: "center",
-							alignItems: "center",
-							gap: 10,
-						}}
-					>
-						{title === "new" ? (
-							<>
-								<Pressable
-									onPress={showModal}
-									style={{
-										padding: 10,
-										backgroundColor: "#865d17",
-										borderRadius: 30,
-									}}
-								>
-									<Icon source="trash-can-outline" color="white" size={20} />
-								</Pressable>
-							</>
-						) : (
-							<></>
-						)}
-						<Pressable
-							onPress={() => router.push("order/23")}
+			<Pressable onPress={() => router.push("order/" + order.id)}>
+				<Card.Title
+					title={"Order ID: #" + order.id}
+					subtitle={order.status + " - " + dayjs(order.created_at).fromNow()}
+					left={(props) => (
+						<Avatar.Text
+							{...props}
+							label={order.id}
+							style={{ backgroundColor: "#865d17" }}
+						/>
+					)}
+					right={(props) => (
+						<View
 							style={{
-								padding: 10,
-								backgroundColor: "#140e03",
-								borderRadius: 30,
+								flex: 1,
+								flexDirection: "row",
+								justifyContent: "center",
+								alignItems: "center",
+								gap: 10,
 							}}
 						>
-							<Icon source="transfer-right" color="white" size={20} />
-						</Pressable>
-					</View>
-				)}
-			/>
+							{order.status === "New" ? (
+								<>
+									<Pressable
+										onPress={showModal}
+										style={{
+											padding: 10,
+											backgroundColor: "#865d17",
+											borderRadius: 30,
+										}}
+									>
+										<Icon source="trash-can-outline" color="white" size={20} />
+									</Pressable>
+								</>
+							) : (
+								<></>
+							)}
+							{/* <Pressable
+								onPress={() => router.push("order/23")}
+								style={{
+									padding: 10,
+									backgroundColor: "#140e03",
+									borderRadius: 30,
+								}}
+							>
+								<Icon source="transfer-right" color="white" size={20} />
+							</Pressable> */}
+						</View>
+					)}
+				/>
+			</Pressable>
 		</>
 	);
 };

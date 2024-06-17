@@ -4,18 +4,18 @@ import { categories } from "@/constants";
 import { Button } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 
-const Categories = () => {
-	const [activeCategory, setActiveCategory] = useState(1);
-
+const Categories = ({ category, setCategory, cate }: any) => {
+	const [activeCategory, setActiveCategory] = useState(cate);
+	
 	return (
 		<LinearGradient
-			colors={[ "#dfc59a", '#d0ac6d']}
+			colors={["#dfc59a", "#d0ac6d"]}
 			style={{ paddingVertical: 12 }}
 		>
 			<FlatList
 				horizontal
 				showsHorizontalScrollIndicator={false}
-				data={categories}
+				data={category}
 				contentContainerStyle={{
 					paddingHorizontal: 12,
 					// flex: 1,
@@ -23,18 +23,21 @@ const Categories = () => {
 				}}
 				keyExtractor={(item: any) => item.id}
 				renderItem={({ item }) => {
-					const isActive = item.id == activeCategory;
+					const isActive = item.id == cate;
 					let activeTextClass = isActive ? "#dfc59a" : "#140e03";
 					return (
 						<Button
-							onPress={() => setActiveCategory(item.id)}
+							onPress={() => {
+								setActiveCategory(item.id);
+								setCategory(item.id);
+							}}
 							style={{
 								shadowColor: "black",
 								shadowOpacity: 2,
 								shadowRadius: 10,
 								backgroundColor: isActive ? "#140e03" : "#dfc59a",
-								borderColor: '#140e03',
-								borderWidth: 1
+								borderColor: "#140e03",
+								borderWidth: 1,
 							}}
 						>
 							<Text
@@ -42,7 +45,7 @@ const Categories = () => {
 									color: activeTextClass,
 								}}
 							>
-								{item.title}
+								{item.name}
 							</Text>
 						</Button>
 					);

@@ -1,14 +1,25 @@
-import { View, Text, FlatList } from "react-native";
+import { View, FlatList, RefreshControl } from "react-native";
 import React from "react";
-import { coffeeItems } from "@/constants";
-import ProductListItem from "./ProductListItem";
-import CarouselCard from "./CarouselCard";
 
-const ListProducts = () => {
+import ProductListItem from "./ProductListItem";
+
+const ListProducts = ({ products, setCategory }: any) => {
+	const [refreshing, setRefreshing] = React.useState(false);
+
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		setCategory(0);
+		setTimeout(() => {
+			setRefreshing(false);
+		}, 2000);
+	}, []);
 	return (
 		<View style={{ flex: 1 }}>
 			<FlatList
-				data={coffeeItems}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+				data={products}
 				renderItem={({ item, index }) => (
 					<ProductListItem product={item} key={index} />
 				)}

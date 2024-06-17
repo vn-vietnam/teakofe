@@ -1,3 +1,6 @@
+import AuthProvider, { useAuth } from "@/provider/AuthProvider";
+import CartProvider from "@/provider/CartProvider";
+import QueryProvider from "@/provider/QueryProvider";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -24,31 +27,37 @@ export default function RootLayout() {
 	}
 
 	return (
-		<PaperProvider>
-			<Stack>
-				<Stack.Screen name="login" options={{ headerShown: false }} />
-				<Stack.Screen name="register" options={{ headerShown: false }} />
-				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-				<Stack.Screen name="search" options={{ headerShown: false }} />
-				{/* <Stack.Screen
+		<AuthProvider>
+			<QueryProvider>
+				<CartProvider>
+					<PaperProvider>
+						<Stack>
+							<Stack.Screen name="login" options={{ headerShown: false }} />
+							<Stack.Screen name="register" options={{ headerShown: false }} />
+							<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+							<Stack.Screen name="search" options={{ headerShown: false }} />
+							{/* <Stack.Screen
 					name="cart"
 					options={{ headerShown: false, presentation: "modal" }}
 				/> */}
-				<Stack.Screen
-					name="policy"
-					options={{ headerShown: false, presentation: "modal" }}
-				/>
-				<Stack.Screen
-					name="information"
-					options={{ headerShown: false, presentation: "modal" }}
-				/>
-				<Stack.Screen
-					name="about"
-					options={{ headerShown: false, presentation: "modal" }}
-				/>
+							<Stack.Screen
+								name="policy"
+								options={{ headerShown: false, presentation: "modal" }}
+							/>
+							<Stack.Screen
+								name="information"
+								options={{ headerShown: false, presentation: "modal" }}
+							/>
+							<Stack.Screen
+								name="about"
+								options={{ headerShown: false, presentation: "modal" }}
+							/>
 
-				<Stack.Screen name="+not-found" />
-			</Stack>
-		</PaperProvider>
+							<Stack.Screen name="+not-found" />
+						</Stack>
+					</PaperProvider>
+				</CartProvider>
+			</QueryProvider>
+		</AuthProvider>
 	);
 }

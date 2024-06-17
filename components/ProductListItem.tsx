@@ -11,7 +11,7 @@ const ProductListItem = ({ product }: any) => {
 				<Image
 					source={product.image}
 					contentFit="cover"
-					transition={1000}
+					transition={500}
 					style={{ width: "100%", height: 100, borderRadius: 10 }}
 				/>
 				<View

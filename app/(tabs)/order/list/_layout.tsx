@@ -20,6 +20,7 @@ export default function OrderListNavigator() {
 			</Appbar.Header>
 			<TopTabs>
 				<TopTabs.Screen name="index" options={{ title: "New" }} />
+				<TopTabs.Screen name="archive" options={{ title: "Accepted" }} />
 			</TopTabs>
 		</>
 	);

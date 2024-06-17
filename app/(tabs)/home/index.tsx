@@ -22,19 +22,30 @@ import { HelloWave } from "@/components/HelloWave";
 import CarouselCard from "@/components/CarouselCard";
 import ListProducts from "@/components/ListProducts";
 import { LinearGradient } from "expo-linear-gradient";
+import { useAuth } from "@/provider/AuthProvider";
+import { Banner } from "react-native-paper";
+import { useCategoryList } from "@/api/category";
+import { useFilterProductList, useProductList } from "@/api/product";
 
 export default function HomeScreen() {
-	const { width, height } = Dimensions.get("window");
+	const { profile }: any = useAuth();
+	const [visible, setVisible] = useState(true);
 	const [location, setLocation] = useState<any>(null);
 	const router = useRouter();
-	const getLocation = async () => {
-		let { status } = await Location.requestForegroundPermissionsAsync();
-		if (status !== "granted") {
-			console.log("please accept location ");
-		}
-		let location = await Location.getCurrentPositionAsync({});
-		setLocation(location);
-	};
+
+	const [cate, setCate] = useState<any>(0);
+	const { data: categories } = useCategoryList();
+	const { data: products, error, isLoading }: any = useFilterProductList(cate);
+
+	// location
+	// const getLocation = async () => {
+	// 	let { status } = await Location.requestForegroundPermissionsAsync();
+	// 	if (status !== "granted") {
+	// 		console.log("please accept location ");
+	// 	}
+	// 	let location = await Location.getCurrentPositionAsync({});
+	// 	setLocation(location);
+	// };
 	// console.log(location);
 	const Cart = () => {
 		router.push("cart");
@@ -51,7 +62,8 @@ export default function HomeScreen() {
 		>
 			<Appbar.Header style={{ backgroundColor: "#dfc59a" }}>
 				<Appbar.Content
-					title="Hello, there 👋"
+					title={"Hello, there 👋"}
+					// "Hello, there 👋"
 					titleStyle={{ fontSize: 20, fontWeight: "bold", color: "#140e03" }}
 				/>
 				<Appbar.Action
@@ -80,8 +92,37 @@ export default function HomeScreen() {
 			{/* <View style={{}}>
 				<CarouselCard />
 			</View> */}
-			<Categories />
-			<ListProducts />
+			{profile?.full_name ? (
+				<></>
+			) : (
+				<Banner
+					visible={visible}
+					style={{ backgroundColor: "#402c0b" }}
+					actions={[
+						{
+							label: "Update",
+							onPress: () => router.navigate("/information"),
+							textColor: "#dfc59a",
+						},
+					]}
+					icon={({ size }) => (
+						<Image
+							source={require("@/assets/images/icon.png")}
+							style={{
+								width: size,
+								height: size,
+							}}
+						/>
+					)}
+				>
+					<Text style={{ color: "#dfc59a" }}>
+						Please update your profile to order coffee!
+					</Text>
+				</Banner>
+			)}
+
+			<Categories category={categories} setCategory={setCate} cate={cate}/>
+			<ListProducts products={products} setCategory={setCate} />
 		</LinearGradient>
 	);
 }

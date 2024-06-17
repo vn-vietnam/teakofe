@@ -1,30 +1,55 @@
 import React, { useCallback, useRef } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Appbar, Button, Divider, List } from "react-native-paper";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image } from "expo-image";
+import { useOrderDetails } from "@/api/orders";
 
 const SingleOrder = () => {
 	const router = useRouter();
 	const bottomSheetRef = useRef<BottomSheet>(null);
-
+	const { id: idString }: any = useLocalSearchParams();
 	// callbacks
 	const handleSheetChanges = useCallback((index: number) => {
-		console.log("handleSheetChanges", index);
+		// console.log("handleSheetChanges", index);
 	}, []);
+	const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
 
-	const snapPoints = ["35%", "90%"]; // Define snap points here
+	const { data: order, isLoading, error } = useOrderDetails(id);
+	// useUpdateOrderSubscription(id);
+	// const { mutate: updateOrder } = useUpdateOrder();
+	// console.log(order);
+	const snapPoints = ["100%"]; // Define snap points here
 
-	const ListItem = ({ title, description, size, price, onPress }: any) => (
+	const ListItem = ({
+		title,
+		description,
+		size,
+		price,
+		onPress,
+		image,
+	}: any) => (
 		<>
 			<List.Item
 				title={title}
 				description={description}
 				onPress={onPress}
-				left={(props) => <List.Icon {...props} icon="folder" />}
+				left={(props) => (
+					<Image
+						source={{ uri: image }}
+						contentFit="cover"
+						transition={1000}
+						style={{
+							marginLeft: 10,
+							width: 50,
+							height: 50,
+							borderRadius: 50,
+						}}
+					/>
+				)}
 				right={() => (
 					<View>
 						<Text>Size: {size}</Text>
@@ -44,7 +69,7 @@ const SingleOrder = () => {
 			>
 				<Appbar.BackAction onPress={() => router.back()} />
 				<Appbar.Content
-					title="Order #01"
+					title={"Order ID: #" + idString}
 					titleStyle={{ fontSize: 20, fontWeight: "800", color: "#140e03" }}
 				/>
 			</Appbar.Header>
@@ -54,76 +79,17 @@ const SingleOrder = () => {
 				style={{ flex: 1 }}
 			>
 				<ScrollView style={{ flex: 1 }}>
-					<ListItem
-						title="First Item"
-						description="Item description"
-						size="M"
-						price="$23"
-						onPress={() => router.push("/home/12")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
-					<ListItem
-						title="Second Item"
-						description="Item description"
-						size="L"
-						price="$25"
-						onPress={() => router.push("/home/13")}
-					/>
+					{order?.order_items?.map((e: any, id: any) => (
+						<ListItem
+							key={id}
+							title={e?.products?.name}
+							description={"Quantity: " + e?.quantity}
+							size={e?.size}
+							price={e?.products?.price}
+							image={e?.products?.image}
+							onPress={() => router.push("/home/" + e?.products?.id)}
+						/>
+					))}
 				</ScrollView>
 				<GestureHandlerRootView style={{ height: 200 }}>
 					<Image
@@ -156,10 +122,10 @@ const SingleOrder = () => {
 							}}
 						>
 							<View style={{ gap: 5 }}>
-								<Text style={{}}>Items: $50</Text>
-								<Text style={{}}>Ship: $54</Text>
+								<Text style={{}}>Items: ${ order?.total.toFixed(2)}</Text>
+								<Text style={{}}>Ship: $5</Text>
 								<Divider style={{ backgroundColor: "black" }} />
-								<Text style={{}}>Total: $54</Text>
+								<Text style={{}}>Total: ${order?.total + 5}</Text>
 							</View>
 							<View style={{ gap: 5 }}>
 								<Text style={{ marginHorizontal: "auto", fontWeight: "bold" }}>
@@ -171,7 +137,7 @@ const SingleOrder = () => {
 									mode="contained"
 									onPress={() => console.log("Pressed")}
 								>
-									Loading
+									{order?.status}
 								</Button>
 							</View>
 						</BottomSheetView>
