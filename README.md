@@ -2,6 +2,17 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Images UI
+<img src="https://github.com/vn-vietnam/teakofe/assets/119742667/02d8dd27-ba09-4ac5-8a41-0bff66a01dab" width="300" />
+<img src="https://github.com/vn-vietnam/teakofe/assets/119742667/8de5d109-e593-4dfe-80e4-28a6b1872219" width="300" />
+<img src="https://github.com/vn-vietnam/teakofe/assets/119742667/a88c256e-8736-461e-a283-70e254d60b1b" width="300" />
+<img src="https://github.com/vn-vietnam/teakofe/assets/119742667/a2b180f0-a0eb-4a5d-a36a-0dfb0b52affc" width="300" />
+<img src="https://github.com/vn-vietnam/teakofe/assets/119742667/705420cb-0283-42d5-ba6b-11d53e583091" width="300" />
+<img src="https://github.com/vn-vietnam/teakofe/assets/119742667/08800cc0-2d5d-449e-a9c6-a21648374a69" width="300" />
+<img src="https://github.com/vn-vietnam/teakofe/assets/119742667/7a3b0401-63e8-4aca-a2c0-2be23eebcfba" width="300" />
+
+
+
 ## Get started
 
 1. Install dependencies
